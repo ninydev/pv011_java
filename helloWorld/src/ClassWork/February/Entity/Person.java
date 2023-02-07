@@ -1,7 +1,15 @@
 package ClassWork.February.Entity;
 
 public class Person implements Cloneable {
-    public String name;
+    private String name;
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getName() {
+        return name;
+    }
 
     @Override
     public Person clone() {
