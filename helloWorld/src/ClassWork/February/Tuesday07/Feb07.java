@@ -1,8 +1,8 @@
-package ClassWork.February;
+package ClassWork.February.Tuesday07;
 
-import ClassWork.February.Entity.Blog.Category;
-import ClassWork.February.Entity.Blog.Post;
-import ClassWork.February.Entity.Person;
+import ClassWork.February.Tuesday07.Entity.Blog.Category;
+import ClassWork.February.Tuesday07.Entity.Blog.Post;
+import ClassWork.February.Tuesday07.Entity.Person;
 import org.jetbrains.annotations.NotNull;
 
 public class Feb07 implements Runnable

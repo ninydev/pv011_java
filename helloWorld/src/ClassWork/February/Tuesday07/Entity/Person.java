@@ -1,4 +1,4 @@
-package ClassWork.February.Entity;
+package ClassWork.February.Tuesday07.Entity;
 
 public class Person implements Cloneable {
     private String name;

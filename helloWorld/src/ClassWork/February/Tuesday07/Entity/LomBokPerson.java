@@ -1,4 +1,4 @@
-package ClassWork.February.Entity;
+package ClassWork.February.Tuesday07.Entity;
 
 
 import lombok.AllArgsConstructor;
