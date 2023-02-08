@@ -1,4 +1,6 @@
 package ClassWork.February.Wednesday08.models;
 
-public class Person {
+import ClassWork.February.Wednesday08.models.interfaces.Printable;
+
+public class Person implements Printable {
 }
