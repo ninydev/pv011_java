@@ -1,4 +1,4 @@
-import ClassWork.February.Week2.Thursday16.ClassWork1602;
+import ClassWork.February.Week3.Tuesday21.ClassWork2102;
 
 
 public class Main {
@@ -8,7 +8,7 @@ public class Main {
      * @param args - аргументы строки
      */
     public static void main(String[] args) {
-        var w = new ClassWork1602();
+        var w = new ClassWork2102();
         w.run();
     }
 
