@@ -1,6 +1,7 @@
 package ClassWork.February.Week3.Tuesday21;
 
 import java.util.ArrayList;
+import java.util.Random;
 import java.util.concurrent.Exchanger;
 import java.util.concurrent.Semaphore;
 
@@ -11,13 +12,18 @@ public class ClassWork2102 implements Runnable {
     }
 
     private void sem() {
+        Random rd = new Random();
         ArrayList<NamedThread> threads = new ArrayList<>();
-        Semaphore sem = new Semaphore(10);
-        for (int i = 0; i < 500; i++) {
+        Semaphore sem = new Semaphore(32);
+        for (int i = 0; i < 50000000; i++) {
             threads.add(new NamedThread(sem," Thread " + i));
         }
-        for (int i = 0; i < 500; i++) {
+        for (int i = 0; i < 50000000; i++) {
             new Thread(threads.get(i)).start();
+            if (rd.nextBoolean()) {
+                new Thread( new CopyNamedThread(sem, " Copy of " + i)).start();
+            }
+
         }
 
     }

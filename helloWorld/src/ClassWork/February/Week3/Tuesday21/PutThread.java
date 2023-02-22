@@ -1,6 +1,8 @@
 package ClassWork.February.Week3.Tuesday21;
 
 import java.util.concurrent.Exchanger;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 public class PutThread implements Runnable
 {
@@ -19,9 +21,13 @@ public class PutThread implements Runnable
 
     public void print () {
         try {
-            String message=exchanger.exchange(" ==> $ usd ");
+            String message=exchanger.exchange(" ==> $ usd ", 55, TimeUnit.MICROSECONDS);
             System.out.println("In Put: " + message);
-        }catch (Exception ex) {
+        }
+        catch (TimeoutException ex) {
+            System.out.println("Я прийшов тебе нема");
+        }
+        catch (Exception ex) {
             System.out.println(ex.getMessage());
         }
     }
