@@ -20,16 +20,43 @@ public class ClassWork2302 implements Runnable
 
             System.out.println("DB Ok");
 
-            String sqlQuery = "CREATE TABLE posts (" +
-                    "id INT PRIMARY KEY AUTO_INCREMENT," +
-                    "title VARCHAR (64)" +
-                    ")";
+            String sqlQuery;
 
             Statement statement = conn.createStatement();
-            statement.executeUpdate(sqlQuery);
             // executeUpdate -- INSERT, UPDATE, CREATE ....
             // executeQuery -- SELECT
             // execute -- true (если есть ответ от SELECT) false
+
+
+//            sqlQuery = "CREATE TABLE posts (" +
+//                    "id INT PRIMARY KEY AUTO_INCREMENT," +
+//                    "title VARCHAR (64)" +
+//                    ")";
+//            statement.executeUpdate(sqlQuery);
+
+//            sqlQuery = "INSERT INTO posts (title) VALUES('First Post'), ('Second Post')";
+//            statement.executeUpdate(sqlQuery);
+
+//            sqlQuery = "SELECT * from posts";
+//            ResultSet resultSet = statement.executeQuery(sqlQuery);
+//
+//            while (resultSet.next()) {
+//                int id = resultSet.getInt(1);
+//                String title = resultSet.getString("title");
+//
+//                System.out.println(id + " " + title);
+//            }
+
+            sqlQuery = "SELECT * from posts WHERE id=?";
+            PreparedStatement preparedStatement = conn.prepareStatement(sqlQuery);
+            preparedStatement.setInt(1,1);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                int id = resultSet.getInt(1);
+                String title = resultSet.getString("title");
+
+                System.out.println(id + " " + title);
+            }
 
 
 
