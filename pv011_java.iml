@@ -25,5 +25,8 @@
         <SOURCES />
       </library>
     </orderEntry>
+    <orderEntry type="library" name="mysql-connector-j-8.0.32" level="project" />
+    <orderEntry type="library" name="annotations-23.0.0" level="project" />
+    <orderEntry type="library" name="lombok-1.18.22" level="project" />
   </component>
 </module>
