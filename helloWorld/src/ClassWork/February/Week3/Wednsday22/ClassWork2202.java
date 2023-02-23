@@ -1,4 +1,4 @@
-package ClassWork.February.Week3.Wednsday21;
+package ClassWork.February.Week3.Wednsday22;
 
 public class ClassWork2202 implements Runnable
 {
