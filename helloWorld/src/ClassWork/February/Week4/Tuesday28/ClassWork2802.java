@@ -34,6 +34,25 @@ public class ClassWork2802 implements Runnable
 
             // Получить сессию работы с базой
             Session session = sessionFactory.openSession();
+            // Начать транзакцию
+            Transaction tr = session.beginTransaction();
+//*-------------------------------------------------------------------------------------------------------------------
+            Tag n = new Tag();
+            n.setName("Test DB");
+
+            User u = new User();
+            u.setEmail("keeper@lab325.com");
+
+            Post a = new Post();
+            a.setTitle("Article About DB");
+            a.setAuthor(u);
+            a.getTags().add(n);
+
+            session.save(n);
+            session.save(u);
+            session.save(a);
+            tr.commit();
+//*-------------------------------------------------------------------------------------------------------------------
 
 
 
