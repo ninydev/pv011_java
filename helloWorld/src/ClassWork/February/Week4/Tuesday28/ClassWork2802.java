@@ -1,6 +1,6 @@
 package ClassWork.February.Week4.Tuesday28;
 
-import ClassWork.February.Week3.Tuesday23.Models.Tag;
+import ClassWork.February.Week4.Tuesday28.Models.*;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -23,6 +23,8 @@ public class ClassWork2802 implements Runnable
             Configuration config = new Configuration().configure();
             // Разегистрировать сущность
             config.addAnnotatedClass(Tag.class);
+            config.addAnnotatedClass(User.class);
+            config.addAnnotatedClass(Post.class);
             // Создать строителя сервиса соединения с базой
             StandardServiceRegistryBuilder builder =
                     new StandardServiceRegistryBuilder()
@@ -33,27 +35,30 @@ public class ClassWork2802 implements Runnable
             // Получить сессию работы с базой
             Session session = sessionFactory.openSession();
 
-            // Создадим новую сущность
-            Tag newTag = new Tag();
-            newTag.setName("HelloWorld");
 
-            // Начнем транзакцию
-            Transaction tr = session.beginTransaction();
-            // Сохраним сущность в сессии
-            session.save(newTag);
-            // Завершим транзакцию
-            tr.commit();
 
-            // SELECT by id
-            Tag t = sessionFactory.openSession().get(Tag.class, 12);
-            System.out.println(t);
 
-            // SELECT *
-            List<Tag> lst = sessionFactory.openSession().createQuery("From Tag").list();
-            for (Tag tg: lst
-                 ) {
-                System.out.println(tg);
-            }
+//            // Создадим новую сущность
+//            Tag newTag = new Tag();
+//            newTag.setName("HelloWorld");
+//
+//            // Начнем транзакцию
+//            Transaction tr = session.beginTransaction();
+//            // Сохраним сущность в сессии
+//            session.save(newTag);
+//            // Завершим транзакцию
+//            tr.commit();
+//
+//            // SELECT by id
+//            Tag t = sessionFactory.openSession().get(Tag.class, 12);
+//            System.out.println(t);
+//
+//            // SELECT *
+//            List<Tag> lst = sessionFactory.openSession().createQuery("From Tag").list();
+//            for (Tag tg: lst
+//                 ) {
+//                System.out.println(tg);
+//            }
 
 
 
