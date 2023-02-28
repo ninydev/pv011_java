@@ -1,5 +1,8 @@
 package ClassWork.February.Week3.Tuesday23;
 
+import org.hibernate.SessionFactory;
+import org.hibernate.cfg.Configuration;
+
 import java.sql.*;
 
 public class ClassWork2302 implements Runnable
@@ -7,8 +10,14 @@ public class ClassWork2302 implements Runnable
 
     @Override
     public void run() {
-        firstConnection();
+        hibernateConnection();
     }
+
+    private void hibernateConnection(){
+        SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory();
+    }
+
+
 
     private void firstConnection() {
         Connection conn = null;
