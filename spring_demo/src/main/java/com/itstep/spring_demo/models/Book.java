@@ -16,6 +16,8 @@ public class Book {
 
     private String name;
 
+    @Transient // Временное свойтсво - для VM (для получения данных с формы
+    private Long category_id;
 
     @ManyToOne
     @JoinColumn(name = "category_id", nullable = false)

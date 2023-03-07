@@ -1,7 +1,11 @@
 package com.itstep.spring_demo.controllers.api.book;
 
 import com.itstep.spring_demo.models.Book;
+import com.itstep.spring_demo.models.BookCategory;
+import com.itstep.spring_demo.repositories.BookCategoryRepository;
 import com.itstep.spring_demo.repositories.BookRepository;
+import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.http.HttpRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,10 +18,14 @@ public class BookController
 {
     // @Autowired
     final BookRepository bookRepository;
+    final BookCategoryRepository bookCategoryRepository;
 
-
-    public BookController(BookRepository bookRepository) {
+    public BookController(
+            BookCategoryRepository bookCategoryRepository,
+            BookRepository bookRepository
+    ) {
         this.bookRepository = bookRepository;
+        this.bookCategoryRepository = bookCategoryRepository;
     }
 
 
@@ -47,7 +55,40 @@ public class BookController
      * @return
      */
     @PostMapping("/")
-    public ResponseEntity create(@RequestBody Book book) {
+    public ResponseEntity create(
+            @RequestBody Book book
+    ) {
+        BookCategory category =bookCategoryRepository.findById(book.getCategory_id()).get();
+        System.out.println("+-------------------+");
+        System.out.println(category);
+
+        book.setCategory(category);
+
+        //book.setCategory();
+        System.out.println("+-------------------+");
+        System.out.println(book);
+
+        try {
+            bookRepository.save(book);
+            return ResponseEntity
+                    .status(201)
+                    .body(bookRepository.save(book));
+        } catch (Exception exception) {
+            System.out.println(exception.getMessage());
+            return ResponseEntity
+                    .status(422)
+                    .body(exception.getMessage());
+        }
+    }
+
+    /**
+     * Create
+     *
+     * @param book new Book
+     * @return
+     */
+    @PostMapping("/createFullObj")
+    public ResponseEntity createFullObj(@RequestBody Book book) {
         System.out.println("+-------------------+");
         System.out.println(book);
         try {
