@@ -4,6 +4,7 @@ import com.itstep.spring_demo.models.Book;
 import com.itstep.spring_demo.repositories.BookRepository;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -12,8 +13,6 @@ public class BookController
 {
     // @Autowired
     final BookRepository bookRepository;
-
-    private int access_level; // 0 // (1)
 
 
     public BookController(BookRepository bookRepository) {
@@ -48,6 +47,10 @@ public class BookController
     @PostMapping("/")
     public void create(Book book) {
         bookRepository.save(book);
+    }
+
+    public void createMany(List<Book> books) {
+        bookRepository.saveAll(books);
     }
 
 
