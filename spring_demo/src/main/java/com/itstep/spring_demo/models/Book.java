@@ -18,12 +18,12 @@ public class Book {
 
 
     @ManyToOne
-    @JoinColumn(name = "category_id")
+    @JoinColumn(name = "category_id", nullable = false)
     private BookCategory category;
 
     @ManyToMany
     @JoinTable(
-            name="book_authors",
+            name="x_book_authors",
             joinColumns = @JoinColumn(name="book_id"),
             inverseJoinColumns = @JoinColumn(name="author_id")
     )

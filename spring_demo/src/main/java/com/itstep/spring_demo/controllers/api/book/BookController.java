@@ -1,7 +1,8 @@
-package com.itstep.spring_demo.controllers.api;
+package com.itstep.spring_demo.controllers.api.book;
 
 import com.itstep.spring_demo.models.Book;
 import com.itstep.spring_demo.repositories.BookRepository;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -16,7 +17,6 @@ public class BookController
 
 
     public BookController(BookRepository bookRepository) {
-        System.out.println("\n\nController is created\n\n");
         this.bookRepository = bookRepository;
     }
 
@@ -42,12 +42,28 @@ public class BookController
 
     /**
      * Create
+     *
      * @param book new Book
+     * @return
      */
     @PostMapping("/")
-    public void create(Book book) {
-        bookRepository.save(book);
+    public ResponseEntity create(@RequestBody Book book) {
+        System.out.println("+-------------------+");
+        System.out.println(book);
+        try {
+            bookRepository.save(book);
+            return ResponseEntity
+                    .status(201)
+                    .body(bookRepository.save(book));
+        } catch (Exception exception) {
+            System.out.println(exception.getMessage());
+            return ResponseEntity
+                    .status(422)
+                    .body(exception.getMessage());
+        }
     }
+
+
 
     public void createMany(List<Book> books) {
         bookRepository.saveAll(books);
