@@ -20,7 +20,17 @@ public class BookCategoryController {
 
     @GetMapping("/")
     public Iterable<BookCategory> index(){
-        return bookCategoryRepository.findAll();
+
+        Iterable<BookCategory> books =  bookCategoryRepository.findAll();
+
+        System.out.println("+-------------------+");
+        for (BookCategory cat: books
+             ) {
+
+            System.out.println(cat);
+        }
+        return books;
+
     }
 
     @PostMapping("/")

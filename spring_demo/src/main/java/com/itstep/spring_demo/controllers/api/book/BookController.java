@@ -44,8 +44,13 @@ public class BookController
      * @return Book
      */
     @GetMapping("/{id}")
-    public Optional<Book> findById(@PathVariable long id){
-        return bookRepository.findById(id);
+    public Book findById(@PathVariable long id){
+        return bookRepository.findById(id).get();
+    }
+
+    @GetMapping("/name/{name}")
+    public Book findById(@PathVariable String name){
+        return bookRepository.findByName(name);
     }
 
     /**
