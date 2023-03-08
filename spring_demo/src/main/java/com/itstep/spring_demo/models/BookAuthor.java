@@ -1,5 +1,7 @@
 package com.itstep.spring_demo.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -17,6 +19,7 @@ public class BookAuthor {
 
 
     @ManyToMany(mappedBy = "authors")
+    @JsonIgnore
     private Set<Book> books = new HashSet<>();
 }
 

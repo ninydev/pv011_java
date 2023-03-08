@@ -49,8 +49,10 @@ public class BookController
     }
 
     @GetMapping("/name/{name}")
-    public Book findById(@PathVariable String name){
-        return bookRepository.findByName(name);
+    public Book findByName(@PathVariable String name){
+        // return bookRepository.findByName(name);
+        bookRepository.findByNameContains(name);
+        return bookRepository.searchBookByQuery(name);
     }
 
     /**

@@ -10,8 +10,19 @@ import java.util.List;
 
 public interface BookRepository extends JpaRepository<Book, Long>
 {
-    List<Book> findByCategory(BookCategory category);
 
+    // Четкое равенство
     Book findByName(String name);
+
+    // LIKE %name%
+    Book findByNameContains(String name);
+
+    // LIKE name%
+    Book findByNameStartsWith(String name);
+
+   // свой вариант запроса
+    @Query("SELECT b FROM Book b  WHERE b.name LIKE %:name%")
+    Book searchBookByQuery(String name);
+
 
 }

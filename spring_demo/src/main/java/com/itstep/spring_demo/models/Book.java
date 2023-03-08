@@ -1,8 +1,14 @@
 package com.itstep.spring_demo.models;
 
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.databind.annotation.JsonAppend;
 import jakarta.persistence.*;
 import lombok.Data;
+import org.springframework.boot.jackson.JsonComponent;
 
 import java.util.HashSet;
 import java.util.Set;
