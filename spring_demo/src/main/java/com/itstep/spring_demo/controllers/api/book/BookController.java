@@ -2,18 +2,17 @@ package com.itstep.spring_demo.controllers.api.book;
 
 import com.itstep.spring_demo.models.Book;
 import com.itstep.spring_demo.models.BookCategory;
+import com.itstep.spring_demo.presenters.BookSmallPresenter;
 import com.itstep.spring_demo.repositories.BookCategoryRepository;
 import com.itstep.spring_demo.repositories.BookRepository;
-import jakarta.servlet.http.HttpServletRequest;
-import org.springframework.http.HttpRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/book")
+
 public class BookController
 {
     // @Autowired
@@ -53,6 +52,16 @@ public class BookController
         // return bookRepository.findByName(name);
         bookRepository.findByNameContains(name);
         return bookRepository.searchBookByQuery(name);
+    }
+
+    @GetMapping("/author/{author_id}")
+    public Iterable<Book>  findBookByAuthorId(@PathVariable long author_id){
+        return bookRepository.findBookByAuthorId(author_id);
+    }
+
+    @GetMapping("/object/{id}")
+    public Object findObjectById(@PathVariable long id){
+        return bookRepository.findObjectById(id);
     }
 
     /**

@@ -23,6 +23,7 @@ public class Book {
     private String name;
 
     @Transient // Временное свойтсво - для VM (для получения данных с формы
+    @JsonIgnore
     private Long category_id;
 
     @ManyToOne
