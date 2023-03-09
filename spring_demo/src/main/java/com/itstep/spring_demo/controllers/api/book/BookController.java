@@ -2,9 +2,9 @@ package com.itstep.spring_demo.controllers.api.book;
 
 import com.itstep.spring_demo.models.Book;
 import com.itstep.spring_demo.models.BookCategory;
-import com.itstep.spring_demo.presenters.BookSmallPresenter;
 import com.itstep.spring_demo.repositories.BookCategoryRepository;
 import com.itstep.spring_demo.repositories.BookRepository;
+import com.itstep.spring_demo.viewmodel.VMBookInterface;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -62,6 +62,14 @@ public class BookController
     @GetMapping("/object/{id}")
     public Object findObjectById(@PathVariable long id){
         return bookRepository.findObjectById(id);
+    }
+
+    @GetMapping("/interface/{id}")
+    public VMBookInterface findInterfaceById(@PathVariable long id){
+        VMBookInterface vm =bookRepository.findInterfaceById(id);
+        System.out.println(vm.getClass());
+        System.out.println(vm.toString());
+        return vm;
     }
 
     /**

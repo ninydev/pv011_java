@@ -1,14 +1,9 @@
 package com.itstep.spring_demo.repositories;
 
 import com.itstep.spring_demo.models.Book;
-import com.itstep.spring_demo.models.BookCategory;
-import com.itstep.spring_demo.presenters.BookSmallPresenter;
+import com.itstep.spring_demo.viewmodel.VMBookInterface;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.CrudRepository;
-import org.springframework.data.repository.PagingAndSortingRepository;
-
-import java.util.List;
 
 public interface BookRepository extends JpaRepository<Book, Long>
 // public interface BookRepository extends PagingAndSortingRepository<Book, Long>
@@ -36,6 +31,10 @@ public interface BookRepository extends JpaRepository<Book, Long>
 
     @Query("SELECT b.name AS name, b.id AS num FROM Book b  WHERE b.id = :id")
     Object findObjectById(long id);
+
+    @Query("SELECT b.name AS name, b.id AS id FROM Book b  WHERE b.id = :id")
+    VMBookInterface findInterfaceById(long id);
+
 
 //    @Query("SELECT b.name AS name, b.id AS num FROM Book b  WHERE b.id = :id")
 //    BookSmallPresenter findObjectById(long id);
