@@ -1,0 +1,16 @@
+<mxfile host="app.diagrams.net" modified="2023-03-24T18:43:20.639Z" agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36" etag="PKpma5rRkPkOZq7KRtMq" version="21.1.1" type="device">
+  <diagram name="Сторінка-1" id="itw8TtXj2OGJ5WDGriJD">
+    <mxGraphModel dx="985" dy="1024" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="UdzacDwzOR7lb6HQSKga-1" value="" style="outlineConnect=0;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;shape=mxgraph.aws3.queue;fillColor=#D9A741;gradientColor=none;" vertex="1" parent="1">
+          <mxGeometry x="390" y="190" width="310" height="180" as="geometry" />
+        </mxCell>
+        <mxCell id="UdzacDwzOR7lb6HQSKga-2" value="RabbitMQ" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="490" y="150" width="80" height="30" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
