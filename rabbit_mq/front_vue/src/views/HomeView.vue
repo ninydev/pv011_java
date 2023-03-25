@@ -1,9 +1,10 @@
 <script setup>
 import TheWelcome from '../components/TheWelcome.vue'
+import PostsList from "@/components/posts/PostsList.vue";
 </script>
 
 <template>
   <main>
-    <TheWelcome />
+    <PostsList></PostsList>
   </main>
 </template>

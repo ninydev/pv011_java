@@ -27,6 +27,7 @@ let amqpChannel, amqpConnection;
 const queue = 'pv011_queue';
 
 const amqp = require("amqplib/callback_api");
+const {request, response} = require("express");
 
 amqp.connect('amqp://user:password@rabbit.mq:5672', function(errorConnect, connection) {
     if (errorConnect) {
@@ -49,7 +50,15 @@ amqp.connect('amqp://user:password@rabbit.mq:5672', function(errorConnect, conne
     });
 });
 
+// Получить коллекцию - для теста
+app.get('/nodejs-producer/test', (request, response) => {
+   let p1 = {id: 1, title: "1 Hello Post", body: "1 Post body"};
+   let p2 = {id: 2, title: "2 Hello Post", body: "2 Post body"};
 
+   let res = [p1, p2];
+
+   response.status(200).json(res);
+});
 
 
 
