@@ -19,11 +19,16 @@
 
 <script setup>
 import {usePostsStore} from "@/stores/posts";
-import {onMounted} from "vue";
+import {onMounted, onUnmounted} from "vue";
 const postsStore = usePostsStore()
 
 onMounted(() => {
   postsStore.loadFromServer()
+  postsStore.startSocket()
+})
+
+onUnmounted(() => {
+  postsStore.stopSocket()
 })
 
 </script>

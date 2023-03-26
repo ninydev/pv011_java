@@ -13,11 +13,17 @@ const redisClient = createClient({ url: "redis://redis:6379" });
 const emitter = new Emitter(redisClient);
 
 // Метод который каждые 30 секунд рассылает всем некое сообщение
+let pId = 3;
 setInterval(() => {
     let d = new Date().toLocaleString()
     console.log('Ping: ' + d)
     emitter.emit("message", d + " " + serverName)
-}, 30000);
+    emitter.emit("new-post", JSON.stringify({
+        id: pId++,
+        title: 'new post at ' + d,
+        body: 'postBody'
+    }))
+}, 10000);
 
 
 
@@ -67,7 +73,7 @@ app.get("/nodejs-producer/send-msg", (req, res) => {
     console.log("catch send-msg")
     // Код аналогичен версии в PHP
     emitter.emit("new-message", "Hello from " + serverName)
-    // Отправим сообщение  в очередь сообщений
+    // Отправим сообщение в очередь сообщений
     amqpChannel.sendToQueue(queue, Buffer.from(serverName));
     console.log(" [x] Sent to rabbit %s", serverName);
 

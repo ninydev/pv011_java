@@ -24,6 +24,7 @@ socket.on('message', (data) => {
     toast.info("Some message: \n" + data)
 })
 
+
 // socket.on("new-message", (data) => {
 //     console.log(data)
 //     toast.info("New Message: " + data.username + " : " + data.message)

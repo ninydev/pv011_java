@@ -112,6 +112,38 @@ services:
             - NAME=Consumer
 
 
+    db.cars:
+        image: 'mysql/mysql-server:latest'
+#        ports:
+#            - '3355:3306'
+        environment:
+            MYSQL_ROOT_PASSWORD: 'password!23'
+            MYSQL_ROOT_HOST: '%'
+            MYSQL_DATABASE: 'cars_base'
+            MYSQL_USER: 'user_cars'
+            MYSQL_PASSWORD: 'password'
+            MYSQL_ALLOW_EMPTY_PASSWORD: 1
+        volumes:
+            - './db.cars:/var/lib/mysql'
+        extra_hosts:
+            - 'host.docker.internal:host-gateway'
+        networks:
+            - rabbit_network
+
+    phpmyadmin:
+        image: phpmyadmin
+        ports:
+            - 3356:80
+        environment:
+            - PMA_ARBITRARY=1
+            - UPLOAD_LIMIT=128M
+        extra_hosts:
+            - 'host.docker.internal:host-gateway'
+        networks:
+            - rabbit_network
+        depends_on:
+            -   db.cars
+
 networks:
     rabbit_network:
         driver: bridge
