@@ -1,4 +1,6 @@
 <script setup>
+import LoginForm from "@/components/auth/LoginForm.vue";
+
 defineProps({
   msg: {
     type: String,

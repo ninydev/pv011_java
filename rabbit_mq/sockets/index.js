@@ -20,7 +20,28 @@ server.listen(port, () => {
 // Chatroom
 let numUsers = 0;
 
-io.on('connection', socket => {
+// Авторизация
+const jwt = require('jsonwebtoken');
+const jwt_key ="1a2b3c4d"
+
+io.use(function(socket, next){
+  console.log('try jwt query')
+  console.log(socket.handshake.query.token)
+  if (socket.handshake.query && socket.handshake.query.token){
+    console.log('token in query')
+    jwt.verify(socket.handshake.query.token, jwt_key, function(err, user) {
+      if (err) return next(); // next(new Error('Authentication error'));
+      socket.user = user;
+      next();
+    });
+  }
+  else {
+    next()
+    // next(new Error('Authentication error'));
+  }
+}).on('connection', socket => {
+  console.log('user incoming')
+  console.log(socket.user)
 
   console.log("new: " + socket.handshake.address )
 

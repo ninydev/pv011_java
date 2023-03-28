@@ -1,4 +1,5 @@
 import {toast} from "vue3-toastify";
+import myLocalStorage from "@/services/myLocalStorage";
 
 export default function (url, options = {}) {
 
@@ -8,6 +9,12 @@ export default function (url, options = {}) {
         // url = 'http://localhost/' + url
         // console.log('+ Fetch +')
         // console.log(url)
+
+        // Подключаем в заголовок JWT
+        options.headers = {
+            'token': myLocalStorage.getItem('token')
+        }
+
 
         fetch(url, options)
             .then(response => {
@@ -21,7 +28,7 @@ export default function (url, options = {}) {
                 }
             })
             .then(data => {
-                toast.info("Get")
+                toast.info("Api request Ok")
                 resole(data)
             })
             .catch(err => {

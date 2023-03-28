@@ -1,6 +1,8 @@
 <template>
   <h1> Посты на сайте: </h1>
 
+  <LoginForm></LoginForm>
+
   <div v-if="postsStore.isLoaded">
     <ul>
       <li v-for="post in postsStore.posts" :key="post.id">
@@ -20,6 +22,7 @@
 <script setup>
 import {usePostsStore} from "@/stores/posts";
 import {onMounted, onUnmounted} from "vue";
+import LoginForm from "@/components/auth/LoginForm.vue";
 const postsStore = usePostsStore()
 
 onMounted(() => {

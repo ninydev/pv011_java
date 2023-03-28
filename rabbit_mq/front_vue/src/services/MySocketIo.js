@@ -1,11 +1,15 @@
-import {io} from "socket.io-client"
+import {connect, io} from "socket.io-client"
 import {toast} from "vue3-toastify"
+import myLocalStorage from "@/services/myLocalStorage";
+import MyLocalStorage from "@/services/myLocalStorage";
 
-let socket = io('http://localhost')
+let socket = io('http://localhost', {
+    query: {'token': MyLocalStorage.getItem('token')}
+})
 
-socket.on ('connect', () => {
+socket.on( 'connect',  () => {
     console.log('Connect')
-    toast.info('Socket Connect')
+    toast.info('Socket Connect from Module')
 })
 
 socket.on ('error', () => {

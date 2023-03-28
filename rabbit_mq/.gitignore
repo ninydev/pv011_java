@@ -1,4 +1,4 @@
 .idea
 /front_vue/node_modules/
 /sockets/node_modules/
-/db.cars
+/db.cars/
