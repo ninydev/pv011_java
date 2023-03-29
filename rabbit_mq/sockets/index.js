@@ -22,7 +22,7 @@ let numUsers = 0;
 
 // Авторизация
 const jwt = require('jsonwebtoken');
-const jwt_key ="1a2b3c4d"
+const jwt_key ="uTurgrInrmtmuS91HLRwxO7J4N6tAHvSocoiF3s7w9Ejfxt88NktVActiUbhmY9i"
 
 io.use(function(socket, next){
   console.log('try jwt query')
