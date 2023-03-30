@@ -21,5 +21,6 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 
 
-Route::middleware('auth:api')->
-get('posts', \App\Http\Controllers\Api\PostController::class . '@index');
+//Route::middleware('auth:api')->
+Route::get('posts', \App\Http\Controllers\Api\PostController::class . '@index');
+Route::get('posts/error', \App\Http\Controllers\Api\PostController::class . '@withError');

@@ -11,6 +11,14 @@
     </ul>
   </div>
 
+  <div v-else-if="postsStore.isError">
+    <ul>
+      <li v-for="(error, index) in postsStore.errors" :key="index">
+        {{ index }} - {{error}}
+      </li>
+    </ul>
+  </div>
+
   <div v-else>
     Данные не загружены
   </div>

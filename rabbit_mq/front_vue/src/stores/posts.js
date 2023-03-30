@@ -7,23 +7,31 @@ import MySocketIo from "@/services/MySocketIo";
 export const usePostsStore = defineStore('post', {
     state: () => ({
         isLoaded: false,
-        posts: []
+        posts: [],
+        isError: false,
+        errors: []
     }),
     actions: {
         loadFromServer() {
             this.isLoaded = false
 
-            if (myLocalStorage.getItem("posts")) {
-                this.posts = myLocalStorage.getItem("posts")
-                this.isLoaded = true
-                return
-            }
+            // if (myLocalStorage.getItem("posts")) {
+            //     this.posts = myLocalStorage.getItem("posts")
+            //     this.isLoaded = true
+            //     return
+            // }
 
-            myFetch('/nodejs-producer/test')
+            myFetch('/api/posts/error')
                 .then(data => {
                     this.posts = data
                     myLocalStorage.setItem("posts", data)
                     this.isLoaded = true
+                    this.isError = false
+                    this.errors = []
+                })
+                .catch(errors => {
+                    this.isError = true
+                    this.errors = errors
                 })
 
             // fetch('/nodejs-producer/test')
@@ -43,17 +51,17 @@ export const usePostsStore = defineStore('post', {
         },
 
         updatePosts(data) {
-            this.posts.push(JSON.parse(data))
-            toast.info('New Post')
-            myLocalStorage.setItem("posts", this.posts)
+            // this.posts.push(JSON.parse(data))
+            // toast.info('New Post')
+            // myLocalStorage.setItem("posts", this.posts)
         },
 
         startSocket() {
-            MySocketIo.on('new-post', this.updatePosts)
+            // MySocketIo.on('new-post', this.updatePosts)
         },
 
         stopSocket() {
-            MySocketIo.off('new-post', this.updatePosts)
+            // MySocketIo.off('new-post', this.updatePosts)
         }
     }
 })

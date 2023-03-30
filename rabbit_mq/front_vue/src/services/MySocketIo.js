@@ -23,10 +23,10 @@ socket.on('my-name-is', (data) => {
 })
 
 
-socket.on('message', (data) => {
-    console.log(data)
-    toast.info("Some message: \n" + data)
-})
+// socket.on('message', (data) => {
+//     console.log(data)
+//     toast.info("Some message: \n" + data)
+// })
 
 
 // socket.on("new-message", (data) => {
