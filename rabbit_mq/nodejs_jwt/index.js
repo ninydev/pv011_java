@@ -39,9 +39,13 @@ app.post("/api/auth/login", (request, response) => {
     console.log(token)
 
     response.status(200).json({
-        "user" : user,
-        "token": token,
-        "message": "Welcome"
+        "success" : true,
+        "data" : {
+            "user": user,
+            "token": token,
+            "message": "Welcome"
+        },
+        errors: []
     })
 });
 

@@ -26,23 +26,26 @@ class PostController extends Controller
      * @return \Illuminate\Database\Eloquent\Collection
      */
     public function index(Request $request){
+        // Построить ключ, в который мы внесем все данные
+        // key = 'appPosts_page=' + $page + 'perPage=' + $perPage + 'search=' + $search ....;
+
         $content = Cache::remember('appPosts', 60, function () {
            return Post::all();
         });
 
         // return response()->json(['error' => 'Unauthenticated.'], 419);
 
-//        try {
-//            $redis = new \Redis(); // Using the Redis extension provided client
-//            $redis->connect('redis', '6379');
-//            $emitter = new Emitter($redis);
-//            $emitter->broadcast->emit('new-message', [
-//                'username' => 'serverApi: ' . env('NAME', ' Some api Server '),
-//                'message' => 'Hello From API'
-//            ]);
-//        } catch (Exception $exception) {
-//            Log::error($exception->getMessage());
-//        }
+        try {
+            $redis = new \Redis(); // Using the Redis extension provided client
+            $redis->connect('redis', '6379');
+            $emitter = new Emitter($redis);
+            $emitter->to('by_user_id_10')->emit('new-message', [
+                'username' => 'serverApi: ' . env('NAME', ' Some api Server '),
+                'message' => 'Hello From API'
+            ]);
+        } catch (Exception $exception) {
+            Log::error($exception->getMessage());
+        }
 
         return $content;
     }
@@ -54,6 +57,19 @@ class PostController extends Controller
      * @return mixed
      */
     public function withError(Request $request) {
+
+        try {
+            $redis = new \Redis(); // Using the Redis extension provided client
+            $redis->connect('redis', '6379');
+            $emitter = new Emitter($redis);
+            $emitter->to('by_user_id_10')->emit('new-message', [
+                'username' => 'serverApi: ' . env('NAME', ' Some api Server '),
+                'message' => 'Hello From API to Room'
+            ]);
+        } catch (Exception $exception) {
+            Log::error($exception->getMessage());
+        }
+
         $content = Cache::remember('appPosts', 60, function () {
             return Post::all();
         });

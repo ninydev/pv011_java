@@ -6,6 +6,7 @@ import MySocketIo from "@/services/MySocketIo";
 import socket from "@/services/MySocketIo";
 import MyLocalStorage from "@/services/myLocalStorage";
 import {io} from "socket.io-client";
+import MyLog from "@/services/myLog";
 
 export const useAuthStore = defineStore('auth', {
    state: () => ({
@@ -15,6 +16,13 @@ export const useAuthStore = defineStore('auth', {
        user: null
    }),
     actions: {
+       async isOnline() {
+           await socket.emit('is-online', 10)
+           console.log("Test")
+           await socket.on('is-online', data => {
+               toast("user " + data.userId + " online: " + data.isOnline)
+           })
+       },
        apiLogin() {
            this.isProcessing = true
            myFetch('/api/auth/login', {
@@ -32,6 +40,23 @@ export const useAuthStore = defineStore('auth', {
                    socket = io('http://localhost', {
                        query: {'token': MyLocalStorage.getItem('token')}
                    })
+                   socket.on("message", data => {
+                       toast(data)
+                   })
+
+                   socket.on('stay_online', (data) => {
+                       toast("stay online at " + data)
+                   })
+
+
+
+                   // Вещаю в свою комнату, что я онлайн
+                   let i = setInterval(() => {
+                       let d = Date.now()
+                       MyLog("stay " + d)
+                       socket.to('from_user_id_10').emit('stay_online', d)
+                   }, 1000)
+
                })
        }
     }

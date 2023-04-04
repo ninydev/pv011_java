@@ -8,6 +8,7 @@ const port = process.env.PORT || 3000;
 const serverName = process.env.NAME || 'Unknown';
 
 const pubClient = createClient({ host: 'redis', port: 6379 });
+const clientRedis = pubClient.duplicate();
 const subClient = pubClient.duplicate();
 
 io.adapter(createAdapter(pubClient, subClient));
@@ -18,20 +19,53 @@ server.listen(port, () => {
 });
 
 // Chatroom
-let numUsers = 0;
+let numUsers = 0; // Количество открытых соединений на сервере
+
+// Количество открытых зарегистрированных пользователей
+// Такой способ не подходит, если у меня несколько копий работы с сокетами
+let socketByUserId = [];
 
 // Авторизация
 const jwt = require('jsonwebtoken');
 const jwt_key ="uTurgrInrmtmuS91HLRwxO7J4N6tAHvSocoiF3s7w9Ejfxt88NktVActiUbhmY9i"
 
 io.use(function(socket, next){
-  console.log('try jwt query')
-  console.log(socket.handshake.query.token)
+  // console.log('try jwt query')
+  // console.log(socket.handshake.query.token)
   if (socket.handshake.query && socket.handshake.query.token){
-    console.log('token in query')
+    //console.log('token in query')
     jwt.verify(socket.handshake.query.token, jwt_key, function(err, user) {
       if (err) return next(); // next(new Error('Authentication error'));
       socket.user = user;
+      // Если пользователь передал ключ (он зарегистрирован)
+      if (socketByUserId[user.id] === undefined)
+        socketByUserId[user.id] = 0
+      socketByUserId[user.id]++
+      // console.log("Зафиксирован вход с ключем. Всего таких: " + socketByUserId[user.id] )
+      // console.log(socketByUserId)
+
+      // Добавить вход о пользователе в редис
+      try {
+        clientRedis.set("New_User_Id_" + user.id, JSON.stringify(user));
+        let socketsCount = clientRedis.get("socketByUserId_" + user.id, (err, data) => {
+          if (err) {
+            console.log("Redis Callback err")
+            console.log(err)
+            data = 0
+          }
+          data++
+          clientRedis.set("socketByUserId_" + user.id, data);
+        });
+
+      } catch (e) {
+        console.log("Redis Error")
+      }
+
+      //Сообщить всем, кто ждет этого пользователя что он пришел
+      socket.to("from_user_id_" + socket.user.id).emit('new_login', {
+        user: user,
+        message: "new socket open"
+      })
       next();
     });
   }
@@ -40,8 +74,22 @@ io.use(function(socket, next){
     // next(new Error('Authentication error'));
   }
 }).on('connection', socket => {
+
+  numUsers++; // Добавлю количество пользователей на сервере
+  console.log("++ users count: " + numUsers)
   console.log('user incoming')
   console.log(socket.user)
+
+  if(socket.user) {
+    console.log("Create Room for User Id")
+    socket.join("by_user_id_" + socket.user.id) // Комната для сообщений к пользователю
+    socket.join("from_user_id_" + socket.user.id) // Комната для сообщений от пользователя (например я все еще онлайн)
+    socket.to("by_user_id_" + socket.user.id).emit("message", "Message from Room")
+  }
+
+  socket.join("from_user_id_10") // Комната для сообщений от пользователя (например я все еще онлайн)
+
+
 
   console.log("new: " + socket.handshake.address )
 
@@ -49,6 +97,28 @@ io.use(function(socket, next){
   // Когда кто то устанавливает соединение с сокетом
   // я отсылаю ему сообщение
   socket.emit('my-name-is', serverName);
+
+  // Напишу запрос
+  socket.on('is-online', data =>{
+    console.log("кто то спросил - есть ли онлайн такой пользователь: " + data)
+
+    socket.emit('is-online', {
+      userId: data,
+      isOnline: (socketByUserId[data] !== undefined && socketByUserId[data] !== 0)
+    })
+    //
+    // if (socketByUserId[data] !== undefined && socketByUserId[data] !== 0) {
+    //   socket.emit('is-online', {
+    //     userId: data,
+    //     isOnline: true
+    //   })
+    // } else {
+    //   socket.emit('is-online', {
+    //     userId: data,
+    //     isOnline: false
+    //   })
+    // }
+  })
 
 
   socket.on('new-message', data => {
@@ -64,6 +134,45 @@ io.use(function(socket, next){
       message: data
     })
   });
+
+  // when the user disconnects.. perform this
+  socket.on('disconnect', () => {
+    --numUsers; // Отминусовал пользователя
+    console.log("-- users count: " + numUsers)
+    if(socket.user !== undefined) {
+      socketByUserId[socket.user.id]--
+      // socket.to("from_user_id_" + socket.user.id).emit('disconnect', {
+      //   user: socket.user,
+      //   message: "socket close"
+      // })
+
+      clientRedis.get("socketByUserId_" + socket.user.id, (err, data) => {
+        if (err) {
+          console.log("Redis Callback err")
+          console.log(err)
+          data = 0
+        }
+        data--
+        if (data === 0)
+          clientRedis.del("socketByUserId_" + socket.user.id)
+        else
+          clientRedis.set("socketByUserId_" + socket.user.id, data);
+      });
+
+      if (socketByUserId[socket.user.id] === 0) {
+        console.log("Пользователь закрыл все вкладки")
+        // socket.to("from_user_id_" + socket.user.id).emit('disconnect', {
+        //   user: user,
+        //   message: "All socket closed"
+        // })
+        delete socketByUserId[socket.user.id]
+      } else {
+        console.log("Пользователь оставил вкладки Всего таких: " + socketByUserId[socket.user.id] )
+      }
+      console.log(socketByUserId)
+    }
+  });
+
 });
 
 
