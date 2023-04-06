@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Car Test</title>
+</head>
+<body>
+
+<div id="selectCar">
+    <div>
+        <label>Brand (Производитель)</label>
+        <select id="selectBrand"></select>
+    </div>
+    <div>
+        <label>Model (Модель)</label>
+        <select id="selectModel"></select>
+    </div>
+    <div>
+        <label>Generation (поколение)</label>
+        <select id="selectGeneration"></select>
+    </div>
+    <div>
+        <label>Configuration (конфигурация)</label>
+        <select id="selectConfiguration"></select>
+    </div>
+    <div>
+        <label>Modification (модификация)</label>
+        <select id="selectModification"></select>
+    </div>
+</div>
+
+
+<script>
+    /**
+     * Элементы для построения выбора (поиска) автомобиля
+     * Html Elements for build search form
+     * @type {HTMLElement}
+     */
+    let divSelectCar = document.getElementById('selectCar')
+    let selectBrand = document.getElementById('selectBrand')
+    let selectModel = document.getElementById('selectModel')
+    let selectGeneration = document.getElementById('selectGeneration')
+    let selectConfiguration = document.getElementById('selectConfiguration')
+    let selectModification = document.getElementById('selectModification')
+
+    /**
+     * Ключ доступа к публичному API
+     * Partner api key
+     * @type {string}
+     */
+    let apiKey = "Bearer eypv011JhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXJ0bmVySWQiOiI0NzhlZjA2My0xMjVlLTQ4MzQtYTJlOS0wYmJlOGJhZDI4YTciLCJpYXQiOjE2ODA2ODIzMTJ9.tj-KCXg79OJURV9ISIh0L-0-e41qgzVTtTNKyC1R-IU"
+
+
+    /**
+     * Процесс выполнения запроса
+     * Send request processing
+     * @param query
+     * @returns {Promise<unknown>}
+     */
+    function sendRequest(query) {
+        return new Promise((resolve, reject) => {
+            fetch('https://api.catalog.dev.gazerelectronics.com/graphql', {
+                method: 'POST',
+                headers:
+                    {
+                        'Authorization': apiKey,
+                        'Content-Type': 'application/json',
+                    },
+                body: JSON.stringify({
+                    query: query
+                })
+            })
+                .then(res => {
+                    if (res.status !== 200) {
+                        throw new Error("Server status error")
+                    }
+                    return res.json()
+                })
+                .then(data => {
+                    resolve(data.data)
+                })
+                .catch(err => {
+                    console.log("Query Error")
+                    console.log(err)
+                    reject(err)
+                })
+        })
+    }
+
+    /**
+     * Построение выпадающего списка на основе данных
+     * Build select element with data
+     * @param select
+     * @param data
+     */
+    function buildSelect(select, data) {
+        let defSelect = document.createElement('option')
+        defSelect.value = null
+        defSelect.innerText = '-- select --'
+        defSelect.selected = true
+        defSelect.disabled = true
+        select.appendChild(defSelect)
+        data.map(item => {
+            let option = document.createElement('option')
+            option.value = item.id
+            option.innerText = item.name
+            select.appendChild(option)
+        })
+    }
+
+    /**
+     * Первый запрос, построение производителей
+     * First element - build brand select
+     */
+    function doGetBrands() {
+        sendRequest(`query {
+                      brandsCatalog {
+                        BrandsCatalog {
+                          id,
+                          name
+                        }
+                      }
+                    }`)
+            .then(data => {
+                // console.log(data)
+                buildSelect(selectBrand, data.brandsCatalog.BrandsCatalog)
+            })
+    }
+
+    function onBrandChange(ev){
+        let brandId = ev.target.value
+
+        selectModel.innerHTML = ''
+        selectGeneration.innerHTML = ''
+        selectConfiguration.innerHTML = ''
+        selectModification.innerHTML = ''
+
+        sendRequest(`query {
+              modelsCatalog(filter:{
+                brandId: `+ brandId + `
+              }) {
+                ModelsCatalog{
+                  id,
+                  name
+                }
+              }
+            }`)
+            .then(data => {
+                buildSelect(selectModel, data.modelsCatalog.ModelsCatalog)
+            })
+    }
+
+    function onModelChange(ev){
+        let modelId = ev.target.value
+        selectGeneration.innerHTML = ''
+        selectConfiguration.innerHTML = ''
+        selectModification.innerHTML = ''
+
+        sendRequest(`query {
+              generationsCatalog(filter:{
+                modelId: `+ modelId + `
+              }) {
+                GenerationsCatalog{
+                  id,
+                  name
+                }
+              }
+            }`)
+            .then(data => {
+                buildSelect(selectGeneration, data.generationsCatalog.GenerationsCatalog)
+            })
+    }
+
+    function onGenerationChange(ev){
+        let generationId = ev.target.value
+        selectConfiguration.innerHTML = ''
+        selectModification.innerHTML = ''
+
+        sendRequest(`query {
+              configurationsCatalog(filter:{
+                generationId: `+ generationId + `
+              }) {
+                ConfigurationsCatalog{
+                  id,
+                  bodyType
+                }
+              }
+            }`)
+            .then(data => {
+                data.configurationsCatalog.ConfigurationsCatalog.map(rm => {
+                    rm.name = rm.bodyType
+                })
+                buildSelect(selectConfiguration, data.configurationsCatalog.ConfigurationsCatalog)
+            })
+
+    }
+
+    function onConfigurationChange(ev){
+        let configurationId = ev.target.value
+        selectModification.innerHTML = ''
+        sendRequest(`query {
+              modificationsCatalog(filter:{
+                configurationId: `+ configurationId + `
+              }) {
+                ModificationsCatalog{
+                  id,
+                  groupName
+                }
+              }
+            }`)
+            .then(data => {
+                data.modificationsCatalog.ModificationsCatalog.map(rm => {
+                    rm.name = rm.groupName
+                })
+                buildSelect(selectModification, data.modificationsCatalog.ModificationsCatalog)
+            })
+    }
+
+    function onModificationChange(ev){
+        let modificationId = ev.target.value
+    }
+
+    selectBrand.onchange = onBrandChange
+    selectModel.onchange = onModelChange
+    selectGeneration.onchange = onGenerationChange
+    selectConfiguration.onchange = onConfigurationChange
+    selectModification.onchange = onModificationChange
+
+    doGetBrands()
+</script>
+</body>
+</html>
